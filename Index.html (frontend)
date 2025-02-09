@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>🎉 Happy Birthday Moonya 🎉</title>
+    <style>
+        body { background-color: #f9f9f9; font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+        h1 { color: #d81b60; }
+        .question { margin: 20px; font-size: 18px; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; border: none; border-radius: 5px; }
+        .yes { background-color: #4caf50; color: white; }
+        .no { background-color: #f44336; color: white; }
+    </style>
+</head>
+<body>
+    <h1>🎂 Happy Birthday Moonya! 🎂</h1>
+    <p>Axel Star ki taraf se ek chhota sa fun quiz! 😄</p>
+
+    <div id="quiz-container"></div>
+    <button id="submit" style="display:none;">Submit Answers ✅</button>
+
+    <script>
+        const questions = [
+            "Do you love me, Moonya?",
+            "Do you like me, Moonya?",
+            "Kya main tumhe pasand hoon?",
+            "Hamari dosti acchi hai na? 😊",
+            "Hamesha rahogi na mere saath?",
+            "Oye tu kutti hai na?",
+            "Kamini hai na?",
+            "Meri bestie hai na?",
+            "Meri babu hai na?",
+            "Happy birthday is way se accha laga na?",
+            "Axel Star ki masti pasand hai na?",
+            "Kya tum Axel ko miss karti ho kabhi?",
+            "Tumhare bina maza aata hai kya? 😜",
+            "Kya tum Axel ke bina bore hoti ho?",
+            "Kya tum Axel Star se jhoot bolti ho?",
+            "Axel tumhara favorite hai na?",
+            "Moonya ko Axel ki yaad aati hai na?",
+            "Kya Axel sabse funny hai?",
+            "Kya tum Axel ko pagal samajhti ho?",
+            "Axel Star best hai na? ⭐"
+        ];
+
+        const answers = [];
+        const container = document.getElementById('quiz-container');
+
+        questions.forEach((q, index) => {
+            const div = document.createElement('div');
+            div.classList.add('question');
+            div.innerHTML = `
+                <p>${index + 1}. ${q}</p>
+                <button class="yes" onclick="saveAnswer(${index}, 'Yes')">Yes</button>
+                <button class="no" onclick="saveAnswer(${index}, 'No')">No</button>
+            `;
+            container.appendChild(div);
+        });
+
+        function saveAnswer(index, answer) {
+            answers[index] = answer;
+            if (answers.length === questions.length && !answers.includes(undefined)) {
+                document.getElementById('submit').style.display = 'block';
+            }
+        }
+
+        document.getElementById('submit').onclick = function() {
+            fetch('/submit', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ answers: answers, user: 'Moonya' })
+            }).then(() => {
+                alert("Thank you, Moonya! 🎉 Your answers have been sent to Axel Star.");
+            });
+        };
+    </script>
+</body>
+</html>

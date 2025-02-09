@@ -1,0 +1,45 @@
+const express = require('express');
+const nodemailer = require('nodemailer');
+const app = express();
+app.use(express.json());
+
+let submissions = []; // To store answers
+
+// POST endpoint to receive quiz answers
+app.post('/submit', (req, res) => {
+    const { answers, user } = req.body;
+    submissions.push({ user, answers });
+
+    // Send email to Axel (abdullahrehman629@gmail.com)
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: 'your-email@gmail.com',       // Replace with your Gmail
+            pass: 'your-password'               // Replace with your password or app password
+        }
+    });
+
+    const mailOptions = {
+        from: 'your-email@gmail.com',
+        to: 'abdullahrehman629@gmail.com',
+        subject: 'Moonya just completed your quiz!',
+        text: `Here are Moonya's answers:\n\n${answers.map((ans, i) => `${i + 1}. ${ans}`).join('\n')}`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.error(error);
+            res.status(500).send('Error sending email');
+        } else {
+            console.log('Email sent: ' + info.response);
+            res.status(200).send('Answers submitted successfully!');
+        }
+    });
+});
+
+// Admin page to view submissions
+app.get('/admin123', (req, res) => {
+    res.send(`<h1>Submissions</h1><pre>${JSON.stringify(submissions, null, 2)}</pre>`);
+});
+
+app.listen(3000, () => console.log('Server is running on port 3000'));
